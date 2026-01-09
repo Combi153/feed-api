@@ -124,31 +124,4 @@ class UserTest : BehaviorSpec({
             }
         }
     }
-
-    given("비밀번호 없이 유효한 사용자 데이터가 주어졌을 때") {
-        val username = "testuser"
-        val email = "test@example.com"
-
-        `when`("withoutPassword 팩토리 메서드로 사용자를 생성하면") {
-            val user = User.withoutPassword(username = username, email = email)
-
-            then("빈 비밀번호로 사용자가 생성된다") {
-                user.username shouldBe username
-                user.email shouldBe email
-                user.password shouldBe ""
-            }
-        }
-
-        `when`("ID와 함께 withoutPassword 팩토리 메서드로 사용자를 생성하면") {
-            val userId = UserId(1L)
-            val user = User.withoutPassword(id = userId, username = username, email = email)
-
-            then("지정된 ID와 빈 비밀번호로 사용자가 생성된다") {
-                user.id shouldBe userId
-                user.username shouldBe username
-                user.email shouldBe email
-                user.password shouldBe ""
-            }
-        }
-    }
 })

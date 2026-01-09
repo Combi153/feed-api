@@ -9,8 +9,10 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
+@Transactional
 class ExposedUserRepository : UserRepository {
     override fun save(entity: User): User {
         entity.id?.let {
@@ -48,25 +50,16 @@ class ExposedUserRepository : UserRepository {
 
     override fun findAll(): List<User> {
         return UserEntity.selectAll().map {
-            User.withoutPassword(
+            User(
                 id = UserId(it[UserEntity.id].value),
                 email = it[UserEntity.email],
-                username = it[UserEntity.username]
+                username = it[UserEntity.username],
+                password = it[UserEntity.password]
             )
         }
     }
 
     override fun findById(id: Long): User? {
-        return UserEntity.selectAll().where { UserEntity.id eq id }.firstOrNull()?.let {
-            User.withoutPassword(
-                id = UserId(it[UserEntity.id].value),
-                email = it[UserEntity.email],
-                username = it[UserEntity.username]
-            )
-        }
-    }
-
-    override fun findByIdWithPassword(id: Long): User? {
         return UserEntity.selectAll().where { UserEntity.id eq id }.firstOrNull()?.let {
             User(
                 id = UserId(it[UserEntity.id].value),
