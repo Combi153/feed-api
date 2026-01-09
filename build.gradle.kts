@@ -28,10 +28,13 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
+    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // exposed kotlin
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.61.0")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.53.0")
     implementation("org.springframework.data:spring-data-commons")
 }
 
