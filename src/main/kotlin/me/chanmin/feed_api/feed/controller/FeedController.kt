@@ -1,8 +1,8 @@
-package me.chanmin.feed_api.controller
+package me.chanmin.feed_api.feed.controller
 
-import me.chanmin.feed_api.domain.Feed
-import me.chanmin.feed_api.dto.FeedDto
-import me.chanmin.feed_api.service.FeedService
+import me.chanmin.feed_api.feed.domain.Feed
+import me.chanmin.feed_api.feed.dto.FeedDto
+import me.chanmin.feed_api.feed.service.FeedService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

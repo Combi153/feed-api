@@ -1,18 +1,18 @@
-package me.chanmin.feed_api.repository
+package me.chanmin.feed_api.feed.repository
 
-import me.chanmin.feed_api.domain.Feed
-import me.chanmin.feed_api.domain.FeedId
+import me.chanmin.feed_api.feed.domain.Feed
+import me.chanmin.feed_api.feed.domain.FeedId
 import org.springframework.stereotype.Repository
 
 @Repository
 class InMemoryFeedRepository : FeedRepository {
-    override fun save(feed: Feed): Feed {
-        feed.id?.let {
-            store[it] = feed
-            return feed
+    override fun save(entity: Feed): Feed {
+        entity.id?.let {
+            store[it] = entity
+            return entity
         }
         val id = FeedId(++sequence)
-        val newFeed = Feed(id, feed.content)
+        val newFeed = Feed(id, entity.content)
         store[id] = newFeed
         return newFeed
     }

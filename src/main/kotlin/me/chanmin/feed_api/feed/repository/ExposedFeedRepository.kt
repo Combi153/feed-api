@@ -1,8 +1,8 @@
-package me.chanmin.feed_api.repository
+package me.chanmin.feed_api.feed.repository
 
-import me.chanmin.feed_api.domain.Feed
-import me.chanmin.feed_api.domain.FeedEntity
-import me.chanmin.feed_api.domain.FeedId
+import me.chanmin.feed_api.feed.domain.Feed
+import me.chanmin.feed_api.feed.domain.FeedEntity
+import me.chanmin.feed_api.feed.domain.FeedId
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class ExposedFeedRepository : FeedRepository {
-    override fun save(feed: Feed): Feed {
-        feed.id?.let {
+    override fun save(entity: Feed): Feed {
+        entity.id?.let {
             FeedEntity.update({ FeedEntity.id eq it.value }) {
-                it[content] = feed.content
+                it[content] = entity.content
             }
             return FeedEntity.selectAll().where { FeedEntity.id eq it.value }.first().let { row ->
                 Feed(id = FeedId(row[FeedEntity.id].value), content = row[FeedEntity.content])
@@ -23,7 +23,7 @@ class ExposedFeedRepository : FeedRepository {
         }
 
         val id = FeedEntity.insertAndGetId {
-            it[content] = feed.content
+            it[content] = entity.content
         }
         return FeedEntity.selectAll().where { FeedEntity.id eq id.value }.first().let {
             Feed(id = FeedId(it[FeedEntity.id].value), content = it[FeedEntity.content])

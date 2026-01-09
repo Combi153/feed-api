@@ -1,4 +1,4 @@
-package me.chanmin.feed_api.domain
+package me.chanmin.feed_api.feed.domain
 
 @JvmInline
 value class FeedId(val value: Long)

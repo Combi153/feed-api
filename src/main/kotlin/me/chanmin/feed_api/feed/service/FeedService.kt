@@ -1,7 +1,7 @@
-package me.chanmin.feed_api.service
+package me.chanmin.feed_api.feed.service
 
-import me.chanmin.feed_api.domain.Feed
-import me.chanmin.feed_api.repository.FeedRepository
+import me.chanmin.feed_api.feed.domain.Feed
+import me.chanmin.feed_api.feed.repository.FeedRepository
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

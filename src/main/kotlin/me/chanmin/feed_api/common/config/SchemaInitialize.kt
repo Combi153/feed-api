@@ -1,6 +1,6 @@
 package me.chanmin.feed_api.common.config
 
-import me.chanmin.feed_api.domain.FeedEntity
+import me.chanmin.feed_api.feed.domain.FeedEntity
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
