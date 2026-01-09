@@ -2,21 +2,26 @@ package me.chanmin.feed_api.service
 
 import me.chanmin.feed_api.domain.Feed
 import me.chanmin.feed_api.repository.FeedRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class FeedService(private val feedRepository: FeedRepository) {
+@Transactional
+class FeedService(@param:Qualifier("exposedFeedRepository") private val feedRepository: FeedRepository) {
     fun createFeed(content: String): Feed {
         val feed = Feed(null, content)
         return feedRepository.save(feed)
     }
 
+    @Transactional(readOnly = true)
     fun getById(id: Long): Feed {
         val feed = feedRepository.findById(id)
         require(feed != null) { "Feed not found!" }
         return feed
     }
 
+    @Transactional(readOnly = true)
     fun getAll(): List<Feed> {
         return feedRepository.findAll()
     }

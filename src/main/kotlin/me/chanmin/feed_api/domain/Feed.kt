@@ -1,6 +1,9 @@
 package me.chanmin.feed_api.domain
 
-class Feed(var id: Long?, var content: String) {
+@JvmInline
+value class FeedId(val value: Long)
+
+data class Feed(val id: FeedId? = null, var content: String) {
     init {
         require(!content.isEmpty()) { "Content cannot be empty!" }
     }
