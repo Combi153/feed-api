@@ -101,33 +101,66 @@ This is a toy project designed to learn and practice:
 
 ---
 
-### Mission 3: User Management & Authentication 🔐
+### Mission 3: User Management & Manual Authentication 🔐
 
-**Goal:** Implement user system with security
+**Goal:** Implement user system with authentication from scratch (without Spring Security)
 
 - [ ] **User Domain**
-    - [ ] Create User entity with Exposed
-    - [ ] Implement password hashing (BCrypt)
-    - [ ] Add email validation
+    - [ ] Create User entity with Exposed (username, email, password, createdAt)
+    - [ ] Create UserRepository with Exposed
+    - [ ] Implement password hashing with BCrypt
+    - [ ] Add email/username uniqueness validation
+    - [ ] Add User value class for UserId
 
-- [ ] **Authentication**
-    - [ ] Set up Spring Security
-    - [ ] Implement JWT token generation
-    - [ ] Create login/register endpoints
-    - [ ] Add authentication filters
+- [ ] **Authentication Logic**
+    - [ ] Create JWT utility class (generate/validate tokens)
+    - [ ] Implement token generation with JJWT library
+    - [ ] Create AuthService (register, login, validate token)
+    - [ ] Store user context in thread-local or request attribute
 
-- [ ] **Authorization**
-    - [ ] Protect endpoints with @PreAuthorize
-    - [ ] Implement ownership checks (users can only edit their posts)
-    - [ ] Add role-based access control (USER, ADMIN)
+- [ ] **Endpoints**
+    - [ ] POST /auth/register - Create new user
+    - [ ] POST /auth/login - Login and get JWT token
+    - [ ] GET /auth/me - Get current user info
+
+- [ ] **Interceptor-Based Authorization**
+    - [ ] Create AuthInterceptor (HandlerInterceptor)
+    - [ ] Extract and validate JWT from Authorization header
+    - [ ] Add @RequireAuth custom annotation
+    - [ ] Inject current user into controller methods
+    - [ ] Protect feed endpoints (only owner can update/delete)
+
+- [ ] **Error Handling**
+    - [ ] Handle invalid credentials
+    - [ ] Handle expired tokens
+    - [ ] Handle duplicate username/email
+    - [ ] Return proper HTTP status codes (401, 403)
 
 **Learning Topics:**
 
-- Spring Security fundamentals
-- JWT structure and claims
-- Password encryption
-- Security filters and context
-- Kotlin extension functions for security
+- HandlerInterceptor vs Filter
+- JWT structure (header, payload, signature)
+- BCrypt password hashing
+- Custom annotations in Kotlin
+- Thread-local storage pattern
+- Authorization header format (Bearer token)
+- Password validation best practices
+
+**Why Learn This First?**
+Building auth manually helps you understand:
+
+- How authentication actually works
+- What Spring Security does under the hood
+- Token lifecycle management
+- Security concerns and vulnerabilities
+
+**Mission 3B (Optional - Later):**
+Once comfortable with manual auth, migrate to Spring Security to learn:
+
+- How frameworks simplify security
+- Security filter chains
+- @PreAuthorize and method security
+- SecurityContext management
 
 ---
 
@@ -382,10 +415,17 @@ src/main/kotlin/me/chanmin/feed_api/
 
 ### To Add
 
-- **Spring Security** + JWT
-- **Redis** (caching)
-- **PostgreSQL** (production database)
+**Phase 1-3 (Core Learning):**
+
+- **JJWT** (JWT library for manual auth)
+- **BCrypt** (password hashing)
 - **MockK** (testing)
+- **PostgreSQL** (production database)
+
+**Phase 4-5 (Advanced):**
+
+- **Spring Security** (optional - after learning manual auth)
+- **Redis** (caching)
 - **Springdoc OpenAPI** (documentation)
 - **Docker** (containerization)
 
@@ -438,7 +478,8 @@ DELETE /feeds/{id}      # Delete feed
 
 ```
 POST   /auth/register   # Register new user
-POST   /auth/login      # Login user
+POST   /auth/login      # Login user (returns JWT)
+GET    /auth/me         # Get current user (requires auth)
 GET    /users/{id}      # Get user profile
 PATCH  /users/{id}      # Update user profile
 ```
@@ -454,4 +495,3 @@ POST   /users/{id}/follow   # Follow user
 DELETE /users/{id}/follow   # Unfollow user
 GET    /timeline            # Get personalized feed
 ```
-
