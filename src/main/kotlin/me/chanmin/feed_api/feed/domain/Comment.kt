@@ -1,7 +1,7 @@
 package me.chanmin.feed_api.feed.domain
 
 @JvmInline
-value class CommentId(val id: Long)
+value class CommentId(val value: Long)
 
 data class Comment(
     val id: CommentId? = null,
