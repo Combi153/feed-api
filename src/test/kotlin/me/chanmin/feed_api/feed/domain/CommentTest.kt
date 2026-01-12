@@ -206,5 +206,24 @@ class CommentTest : BehaviorSpec({
                 exception.message shouldContain "Author password does not match!"
             }
         }
+
+        `when`("올바른 비밀번호로 비밀번호를 검증하면") {
+            val validPassword = authorPassword
+
+            then("검증이 성공한다") {
+                comment.validateAuthorPassword(validPassword)
+            }
+        }
+
+        `when`("잘못된 비밀번호로 비밀번호 검증을 시도하면") {
+            val wrongPassword = "wrongpassword"
+            val exception = shouldThrow<IllegalArgumentException> {
+                comment.validateAuthorPassword(wrongPassword)
+            }
+
+            then("적절한 메시지와 함께 예외가 발생한다") {
+                exception.message shouldContain "Author password does not match!"
+            }
+        }
     }
 })

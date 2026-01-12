@@ -21,7 +21,7 @@ data class Comment(
         return this.copy(content = newContent)
     }
 
-    private fun validateAuthorPassword(authorPassword: String) {
+    fun validateAuthorPassword(authorPassword: String) {
         require(this.authorPassword == authorPassword) { "Author password does not match!" }
     }
 }
