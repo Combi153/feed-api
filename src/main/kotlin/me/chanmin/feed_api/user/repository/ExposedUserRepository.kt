@@ -59,8 +59,8 @@ class ExposedUserRepository : UserRepository {
         }
     }
 
-    override fun findById(id: Long): User? {
-        return UserEntity.selectAll().where { UserEntity.id eq id }.firstOrNull()?.let {
+    override fun findById(id: UserId): User? {
+        return UserEntity.selectAll().where { UserEntity.id eq id.value }.firstOrNull()?.let {
             User(
                 id = UserId(it[UserEntity.id].value),
                 email = it[UserEntity.email],
@@ -70,7 +70,7 @@ class ExposedUserRepository : UserRepository {
         }
     }
 
-    override fun deleteById(id: Long) {
-        UserEntity.deleteWhere { UserEntity.id eq id }
+    override fun deleteById(id: UserId) {
+        UserEntity.deleteWhere { UserEntity.id eq id.value }
     }
 }

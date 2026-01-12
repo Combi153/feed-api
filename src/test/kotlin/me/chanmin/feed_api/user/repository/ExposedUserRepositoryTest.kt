@@ -7,6 +7,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import me.chanmin.feed_api.user.domain.User
 import me.chanmin.feed_api.user.domain.UserEntity
+import me.chanmin.feed_api.user.domain.UserId
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -85,7 +86,7 @@ class ExposedUserRepositoryTest(
         }
 
         `when`("ID로 사용자를 조회하면") {
-            val foundUser = userRepository.findById(savedUser.id!!.value)
+            val foundUser = userRepository.findById(savedUser.id!!)
 
             then("해당 사용자가 반환된다") {
                 foundUser.shouldNotBeNull()
@@ -97,10 +98,11 @@ class ExposedUserRepositoryTest(
         }
 
         `when`("사용자를 삭제하면") {
-            userRepository.deleteById(savedUser.id!!.value)
+            val userId = savedUser.id!!
+            userRepository.deleteById(userId)
 
             then("해당 사용자를 찾을 수 없다") {
-                val foundUser = userRepository.findById(savedUser.id!!.value)
+                val foundUser = userRepository.findById(userId)
                 foundUser.shouldBeNull()
             }
         }
@@ -121,7 +123,7 @@ class ExposedUserRepositoryTest(
     }
 
     given("존재하지 않는 사용자 ID가 주어졌을 때") {
-        val nonExistentId = 999L
+        val nonExistentId = UserId(999L)
 
         `when`("해당 ID로 사용자를 조회하면") {
             val foundUser = userRepository.findById(nonExistentId)

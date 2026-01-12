@@ -1,6 +1,7 @@
 package me.chanmin.feed_api.feed.controller
 
 import me.chanmin.feed_api.feed.domain.Feed
+import me.chanmin.feed_api.feed.domain.FeedId
 import me.chanmin.feed_api.feed.dto.FeedDto
 import me.chanmin.feed_api.feed.service.FeedService
 import org.springframework.http.HttpStatus
@@ -18,7 +19,7 @@ class FeedController(private val feedService: FeedService) {
 
     @GetMapping("/feeds/{id}")
     fun getFeedById(@PathVariable id: Long): ResponseEntity<Feed> {
-        val feed = feedService.getById(id)
+        val feed = feedService.getById(FeedId(id))
         return ResponseEntity.ok(feed)
     }
 
@@ -30,13 +31,15 @@ class FeedController(private val feedService: FeedService) {
 
     @PatchMapping("/feeds/{id}")
     fun updateFeedById(@RequestBody feedDto: FeedDto, @PathVariable id: Long): ResponseEntity<Feed> {
-        val updateFeed = feedService.updateFeed(id, feedDto.content)
+        val updateFeed = feedService.updateFeed(
+            FeedId(id), feedDto.content
+        )
         return ResponseEntity.ok(updateFeed)
     }
 
     @DeleteMapping("/feeds/{id}")
     fun deleteFeedById(@PathVariable id: Long): ResponseEntity<Unit> {
-        feedService.deleteFeed(id)
+        feedService.deleteFeed(FeedId(id))
         return ResponseEntity.noContent().build()
     }
 }

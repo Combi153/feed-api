@@ -21,12 +21,12 @@ class InMemoryFeedRepository : FeedRepository {
         return store.values.sortedBy { it.id?.value }.toList()
     }
 
-    override fun findById(id: Long): Feed? {
-        return store[FeedId(id)]
+    override fun findById(id: FeedId): Feed? {
+        return store[id]
     }
 
-    override fun deleteById(id: Long): Unit {
-        store.remove(FeedId(id))
+    override fun deleteById(id: FeedId): Unit {
+        store.remove(id)
     }
 
     companion object {

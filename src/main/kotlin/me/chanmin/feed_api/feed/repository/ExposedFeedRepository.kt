@@ -14,20 +14,20 @@ import org.springframework.stereotype.Repository
 class ExposedFeedRepository : FeedRepository {
     override fun save(entity: Feed): Feed {
         entity.id?.let {
-            FeedEntity.update({ FeedEntity.id eq it.value }) {
-                it[content] = entity.content
+            FeedEntity.update({ FeedEntity.id eq it.value }) { row ->
+                row[content] = entity.content
             }
-            return FeedEntity.selectAll().where { FeedEntity.id eq it.value }.first().let { row ->
-                Feed(id = FeedId(row[FeedEntity.id].value), content = row[FeedEntity.content])
-            }
+            return findByIdOrThrow(it)
         }
 
         val id = FeedEntity.insertAndGetId {
             it[content] = entity.content
         }
-        return FeedEntity.selectAll().where { FeedEntity.id eq id.value }.first().let {
-            Feed(id = FeedId(it[FeedEntity.id].value), content = it[FeedEntity.content])
-        }
+        return findByIdOrThrow(FeedId(id.value))
+    }
+
+    private fun findByIdOrThrow(id: FeedId): Feed {
+        return findById(id) ?: throw IllegalStateException("Failed to retrieve updated Feed entity.")
     }
 
     override fun findAll(): List<Feed> {
@@ -39,8 +39,8 @@ class ExposedFeedRepository : FeedRepository {
         }
     }
 
-    override fun findById(id: Long): Feed? {
-        return FeedEntity.selectAll().where { FeedEntity.id eq id }.firstOrNull()?.let {
+    override fun findById(id: FeedId): Feed? {
+        return FeedEntity.selectAll().where { FeedEntity.id eq id.value }.firstOrNull()?.let {
             Feed(
                 id = FeedId(it[FeedEntity.id].value),
                 content = it[FeedEntity.content]
@@ -48,7 +48,7 @@ class ExposedFeedRepository : FeedRepository {
         }
     }
 
-    override fun deleteById(id: Long) {
-        FeedEntity.deleteWhere { FeedEntity.id eq id }
+    override fun deleteById(id: FeedId) {
+        FeedEntity.deleteWhere { FeedEntity.id eq id.value }
     }
 }
