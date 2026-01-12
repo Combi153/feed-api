@@ -119,6 +119,9 @@ class ExposedCommentRepositoryTest(private val commentRepository: ExposedComment
         val feedId = FeedEntity.insertAndGetId {
             it[FeedEntity.content] = "Feed with multiple comments"
         }.value
+        val anotherFeedId = FeedEntity.insertAndGetId {
+            it[FeedEntity.content] = "Another feed"
+        }.value
 
         commentRepository.save(
             Comment(
@@ -144,12 +147,29 @@ class ExposedCommentRepositoryTest(private val commentRepository: ExposedComment
                 content = "Third comment"
             )
         )
+        commentRepository.save(
+            Comment(
+                feedId = FeedId(anotherFeedId),
+                authorName = "commenter4",
+                authorPassword = "pass4",
+                content = "Comment for another feed"
+            )
+        )
 
         `when`("모든 댓글을 조회하면") {
             val allComments = commentRepository.findAll()
 
             then("모든 댓글이 반환된다") {
-                allComments shouldHaveSize 3
+                allComments shouldHaveSize 4
+            }
+        }
+
+        `when`("특정 피드 ID로 댓글을 조회하면") {
+            val feedComments = commentRepository.findByFeedId(FeedId(anotherFeedId))
+
+            then("해당 피드에 속한 댓글들이 반환된다") {
+                feedComments shouldHaveSize 1
+                feedComments.forEach { it.feedId.value shouldBe anotherFeedId }
             }
         }
     }

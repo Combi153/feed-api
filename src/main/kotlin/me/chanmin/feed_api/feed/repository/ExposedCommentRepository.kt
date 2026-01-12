@@ -35,13 +35,13 @@ class ExposedCommentRepository : CommentRepository {
 
 
     override fun findAll(): List<Comment> {
-        return CommentEntity.selectAll().map { row ->
+        return CommentEntity.selectAll().map {
             Comment(
-                id = CommentId(row[CommentEntity.id].value),
-                feedId = FeedId(row[CommentEntity.feedId]),
-                authorName = row[CommentEntity.authorName],
-                authorPassword = row[CommentEntity.authorPassword],
-                content = row[CommentEntity.content]
+                id = CommentId(it[CommentEntity.id].value),
+                feedId = FeedId(it[CommentEntity.feedId]),
+                authorName = it[CommentEntity.authorName],
+                authorPassword = it[CommentEntity.authorPassword],
+                content = it[CommentEntity.content]
             )
         }
     }
@@ -60,5 +60,17 @@ class ExposedCommentRepository : CommentRepository {
 
     override fun deleteById(id: CommentId) {
         CommentEntity.deleteWhere { CommentEntity.id eq id.value }
+    }
+
+    override fun findByFeedId(feedId: FeedId): List<Comment> {
+        return CommentEntity.selectAll().where { CommentEntity.feedId eq feedId.value }.map {
+            Comment(
+                id = CommentId(it[CommentEntity.id].value),
+                feedId = FeedId(it[CommentEntity.feedId]),
+                authorName = it[CommentEntity.authorName],
+                authorPassword = it[CommentEntity.authorPassword],
+                content = it[CommentEntity.content]
+            )
+        }
     }
 }
